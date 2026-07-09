@@ -1,10 +1,23 @@
 #include "video/video.h"
 #include "event/event.h"
+#include "chip_8/chip_8.h"
 #include<stdio.h>
+
+
+
+
+
+
+
 int main(){
     const metadata mdata={"CHIP-8 EMU","0.0.1","com.emulator.chip-8"};
     sdl_vars sv={NULL,NULL,{},mdata};
     config_vars cv={64,32,10,WHITE,BLACK};
+
+    chip_8 chip;
+    init_chip_8(&chip);
+    chip_load_rom(&chip,"testRom.ch8");
+
     bool buf[64][32];
 
     bool keys[0xF];
@@ -35,13 +48,16 @@ int main(){
         SDL_Delay(1000/60);
 
         //Get input event and set keys[]
-        poll_Events(keys,&(sv.event),&isRunning);
+        poll_Events(chip.Keys,&(sv.event),&isRunning);
 
         //CHIP-8 CYCLE
 
 
         //DRAW BUFFER
-        draw_buffer(buf,&sv,&cv);
+        draw_buffer(chip.Display,&sv,&cv);
+
+        //RESET KEYS
+
     }
 
 

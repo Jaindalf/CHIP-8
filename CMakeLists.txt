@@ -10,6 +10,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_subdirectory(vendored/SDL EXCLUDE_FROM_ALL)
 add_subdirectory(video)
 add_subdirectory(event)
+add_subdirectory(chip_8)
 
 # Create your game executable target as usual
 
@@ -20,6 +21,8 @@ add_executable(main  main.c)
 target_link_libraries(main PRIVATE video)
 
 target_link_libraries(main PRIVATE event)
+target_link_libraries(main PRIVATE chip_8)
+
 
 
 
