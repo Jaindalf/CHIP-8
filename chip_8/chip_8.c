@@ -54,10 +54,14 @@ void init_chip_8(chip_8* chip) {
     //set keypad to zero
     for (int i = 0; i < 16; i++) {
         chip->Keys[i]=false;
+        chip->PreviousKeys[i]=false;
     }
 
+
+    //for waiting key release opcode
+    chip->isWaitingForKeys=false;
     //set timers
-    chip->DelayTimer=chip->SoundTimer=0;
+    chip->DelayTimer=chip->SoundTimer=chip->Opcode=0;
 
 }
 
@@ -115,7 +119,7 @@ void chip_load_rom(chip_8 *chip,const char *rom_name) {
 
     for (int i=0; i<size; i++) {
         chip->RAM[START_ADDRESS+i]=buffer[i];
-
+        printf("Index: %d Instruction:%x\n",(i+1),buffer[i]);
     }
 
     chip->PC=START_ADDRESS;
@@ -124,3 +128,18 @@ void chip_load_rom(chip_8 *chip,const char *rom_name) {
     free(buffer);
 }
 
+void chip_get_opcode(chip_8 *chip){
+
+// Do some out-of-bounds checking
+   if(chip->PC<0x200 ||(chip->PC+1)>=4096){
+       printf("Opcode fetch outside RAM at PC = 0x%03X\n", chip->PC);
+		return;
+   }
+
+	uint16_t high_byte=chip->RAM[chip->PC];
+	uint16_t low_byte=chip->RAM[chip->PC +1];
+	chip->Opcode=(high_byte<<8u)|low_byte;
+
+	chip->PC+=2;
+
+}

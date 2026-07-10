@@ -1,6 +1,7 @@
 #ifndef register_h
 #define register_h
 #include <stdint.h>
+#include <stdbool.h>
 //Clear a register
 void register_clear(uint8_t *reg);
 

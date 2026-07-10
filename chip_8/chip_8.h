@@ -1,7 +1,7 @@
 #ifndef chip_8_h
 #define chip_8_h
 #include <stdint.h>
-
+#include<stdbool.h>
 typedef struct  {
     uint8_t V[16]; //16 8 bit registers
     uint8_t RAM[4096]; //4096 bytes of memory
@@ -11,8 +11,13 @@ typedef struct  {
     uint8_t SP; //Stack pointer(holds index of the topmost stack element)
     uint8_t DelayTimer;
     uint8_t SoundTimer;
-    bool Keys[16]; //16 input keys
+    bool Keys[16]; //input keys
+	//specially for release key instruction
+	bool PreviousKeys[16];
+	bool isWaitingForKeys;
+	//
     bool Display[64][32];
+	uint16_t Opcode; //Current instruction chip_8 is to be executing.
 
 }chip_8;
 
@@ -22,5 +27,6 @@ typedef struct  {
 
 void init_chip_8(chip_8* chip);
 void chip_load_rom(chip_8 *chip,char const *rom_name);
+void chip_get_opcode(chip_8 *chip);
 
 #endif
