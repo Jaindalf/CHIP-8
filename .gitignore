@@ -2,4 +2,4 @@ build/
 vendored/
 .cache/
 .idea/
-testRom.ch8
+test_roms/
