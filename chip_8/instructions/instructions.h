@@ -62,5 +62,6 @@ void ins_Fx0A(chip_8 *chip);
 void ins_Fx33(chip_8 *chip);
 void ins_Fx55(chip_8 *chip);
 void ins_Fx65(chip_8 *chip);
-
+void execute_opcode(chip_8 *chip);
+void ins_altFx0A(chip_8 *chip);
 #endif /* INSTRUCTIONS_H */
