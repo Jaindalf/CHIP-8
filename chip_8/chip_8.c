@@ -62,7 +62,8 @@ void init_chip_8(chip_8* chip) {
     chip->isWaitingForKeys=false;
     //set timers
     chip->DelayTimer=chip->SoundTimer=chip->Opcode=0;
-
+    chip->state.Paused=false;
+    chip->state.NextInstruction=false;
 }
 
 void chip_load_rom(chip_8 *chip,const char *rom_name) {
@@ -119,7 +120,7 @@ void chip_load_rom(chip_8 *chip,const char *rom_name) {
 
     for (int i=0; i<size; i++) {
         chip->RAM[START_ADDRESS+i]=buffer[i];
-        printf("Index: %d Instruction:%x\n",(i+1),buffer[i]);
+        //printf("Index: %d Instruction:%x\n",(i+1),buffer[i]);
     }
 
     chip->PC=START_ADDRESS;
@@ -133,7 +134,7 @@ void chip_get_opcode(chip_8 *chip){
 // Do some out-of-bounds checking
    if(chip->PC<0x200 ||(chip->PC+1)>=4096){
        printf("Opcode fetch outside RAM at PC = 0x%03X\n", chip->PC);
-		return;
+	//	return;
    }
 
 	uint16_t high_byte=chip->RAM[chip->PC];

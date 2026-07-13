@@ -3,6 +3,11 @@
 #include <stdint.h>
 #include<stdbool.h>
 typedef struct  {
+	bool Paused;
+	bool NextInstruction;
+
+}chip_8_state;
+typedef struct  {
     uint8_t V[16]; //16 8 bit registers
     uint8_t RAM[4096]; //4096 bytes of memory
     uint16_t IR ; //Index register(holds address of RAM to be used)
@@ -18,8 +23,12 @@ typedef struct  {
 	//
     bool Display[64][32];
 	uint16_t Opcode; //Current instruction chip_8 is to be executing.
+	chip_8_state state;
 
 }chip_8;
+
+
+
 
 #define START_ADDRESS 0x200
 
