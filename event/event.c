@@ -1,6 +1,6 @@
 #include "event.h"
 #include<stdio.h>
-void poll_Events(bool keys[0xF],SDL_Event *event,bool *isRunning) {
+void poll_Events(bool keys[0xF],bool *paused,bool *next,SDL_Event *event,bool *isRunning) {
 
 
     while (SDL_PollEvent(event))
@@ -102,6 +102,14 @@ void poll_Events(bool keys[0xF],SDL_Event *event,bool *isRunning) {
                         keys[0xF] = 1;
                     } break;
 
+                    case  SDLK_P: {
+                        *paused=!(*paused);
+                    }
+
+                    case  SDLK_N: {
+                        *next=1;
+                    }
+
 
                     default:
                         break;
@@ -109,6 +117,105 @@ void poll_Events(bool keys[0xF],SDL_Event *event,bool *isRunning) {
                 break;
             }
 
+
+
+            case SDL_EVENT_KEY_UP:
+            {
+                switch (event->key.key)
+                {
+                    /*case SDLK_ESCAPE:
+                        *isRunning = true;
+                        break;*/
+
+                    case SDLK_X:
+                    {
+                        keys[0] = 0;
+                        printf("x released\n");
+
+                    } break;
+
+                    case SDLK_1:
+                    {
+                        keys[1] = 0;
+                        printf("1 released\n");
+                    } break;
+
+                    case SDLK_2:
+                    {
+                        keys[2] = 0;
+                    } break;
+
+                    case SDLK_3:
+                    {
+                        keys[3] = 0;
+                    } break;
+
+                    case SDLK_Q:
+                    {
+                        keys[4] = 0;
+                    } break;
+
+                    case SDLK_W:
+                    {
+                        keys[5] = 0;
+                    } break;
+
+                    case SDLK_E:
+                    {
+                        keys[6] = 0;
+                    } break;
+
+                    case SDLK_A:
+                    {
+                        keys[7] = 0;
+                    } break;
+
+                    case SDLK_S:
+                    {
+                        keys[8] = 0;
+                    } break;
+
+                    case SDLK_D:
+                    {
+                        keys[9] = 0;
+                    } break;
+
+                    case SDLK_Z:
+                    {
+                        keys[0xA] = 0;
+                    } break;
+
+                    case SDLK_C:
+                    {
+                        keys[0xB] = 0;
+                    } break;
+
+                    case SDLK_4:
+                    {
+                        keys[0xC] = 0;
+                    } break;
+
+                    case SDLK_R:
+                    {
+                        keys[0xD] = 0;
+                    } break;
+
+                    case SDLK_F:
+                    {
+                        keys[0xE] = 0;
+                    } break;
+
+                    case SDLK_V:
+                    {
+                        keys[0xF] = 0;
+                    } break;
+
+
+                    default:
+                        break;
+                }
+                break;
+            }
             default:
                 break;
         }
