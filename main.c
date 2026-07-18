@@ -11,7 +11,6 @@ void chip_cycle(chip_8 *chip) {
     chip_get_opcode(chip);
     execute_opcode(chip);
 
-
 }
 
 double get_time_ms(void) {
@@ -21,12 +20,27 @@ double get_time_ms(void) {
     return (double)ts.tv_sec * 1000.0 + (double)ts.tv_nsec / 1000000.0;
 }
 //-----------------------------GLOBALS------------------------------------------------
-const metadata mdata={"CHIP-8 EMU","0.0.1","com.emulator.chip-8"};
-sdl_vars sv={nullptr,nullptr,{},mdata};
-config_vars cv={64,32,10,WHITE,BLACK};
-chip_8 chip;
 //----------------------------------------------------------------------------------------
+
+#define TIMER_FREQ 60.0f
+#define CPU_FREQ 500.0f
+
+
+
 int main(int argc, char *argv[]) {
+
+    const metadata mdata={"CHIP-8 EMU","0.0.1","com.emulator.chip-8"};
+    // ReSharper disable once CppUseInternalLinkage
+    sdl_vars sv={nullptr,nullptr,nullptr,{},mdata};
+    config_vars cv={64,32,20,WHITE,BLACK,{1,8000,440,0,0}};
+    chip_8 chip;
+
+    float  timer_delta=(1/TIMER_FREQ)*1000;
+    float cpu_delta=(1/CPU_FREQ)*1000;
+
+
+
+
     init_chip_8(&chip);
     chip_load_rom(&chip,argv[1]);
     if (!init_sdl(&sv,cv)) {
@@ -35,19 +49,19 @@ int main(int argc, char *argv[]) {
     }
     //Main loop
     bool isRunning=true;
-    double st,pt,cpu_clock;
-    st=get_time_ms();
-    pt=st;
-    cpu_clock=st;;
-    printf("%lf st time",st);
+    double now,frame_time,cpu_time;
+    now=get_time_ms();
+    frame_time=now;
+    cpu_time=now;;
+
     while (isRunning) {
 
+       // play_audio_stream(&sv);
         //get current
-        st=get_time_ms();
+        now=get_time_ms();
         poll_Events(chip.Keys,&chip.state.Paused,&chip.state.NextInstruction,&(sv.event),&isRunning);
 
-        //Delay for 1/60s
-        //SDL_Delay(atoi(argv[2]));
+
 
         if (chip.state.Paused) {
             if (chip.state.NextInstruction) {
@@ -62,24 +76,37 @@ int main(int argc, char *argv[]) {
         //CHIP-8 CYCLE
         //get opcode
         else {
-            while (st-cpu_clock>=2) {
+            while (now-cpu_time>=cpu_delta) {
                 chip_cycle(&chip);
-                cpu_clock+=2;
+
+
+                cpu_time+=cpu_delta;
+
+
             }
         }
 
-        //DRAW BUFFER
-        //only run if delta_time=1/60sec
-        while (st-pt>=16.666) {
+
+
+
+        while (now-frame_time>=timer_delta) {
             if (chip.DelayTimer>0) {
                 chip.DelayTimer-=1;
             }
 
             if (chip.SoundTimer>0) {
+                fill_audio_stream(&sv, &cv);
+                control_audio_stream(&sv,&cv,1);
                 chip.SoundTimer-=1;
             }
+
+            else if (chip.SoundTimer==0) {
+                control_audio_stream(&sv,&cv,0);
+
+            }
+
             draw_buffer(chip.Display,&sv,&cv);
-            pt+=16.666;
+            frame_time+=timer_delta;
         }
 
 
@@ -94,3 +121,5 @@ int main(int argc, char *argv[]) {
 
 
 }
+
+
