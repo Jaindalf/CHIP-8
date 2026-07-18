@@ -40,6 +40,24 @@ bool init_sdl(sdl_vars *sv, config_vars cv) {
     return false;
   }
 
+
+//Audio
+  SDL_AudioSpec spec;
+  spec.channels = cv.audio_config.channels;
+  spec.format = SDL_AUDIO_F32;
+  spec.freq = cv.audio_config.frequency;
+
+  sv->stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, NULL, NULL);
+  if (!sv->stream) {
+    SDL_Log("Couldn't create audio stream: %s", SDL_GetError());
+    return false;
+  }
+
+  SDL_ResumeAudioStreamDevice(sv->stream);
+
+
+
+
   return true;
 }
 
@@ -87,4 +105,56 @@ void draw_buffer(bool buffer[64][32], sdl_vars *sv, const config_vars *cv)
     SDL_RenderPresent(sv->renderer);
 }
 
+
+//audio stuff
+void fill_audio_stream(sdl_vars *sv, config_vars *cv) {
+   int minimum_audio = (cv->audio_config.frequency * sizeof (float)) / 2;  /* 8000 float samples per second. Half of that. */
+  printf("minimum_audio: %d\n", minimum_audio);
+
+  if (SDL_GetAudioStreamQueued(sv->stream) < minimum_audio) {
+    static float samples[512];  /* this will feed 512 samples each frame until we get to our maximum. */
+
+
+    for (int i = 0; i < SDL_arraysize(samples); i++) {
+      const float phase = cv->audio_config.current_sine_sample * cv->audio_config.sin_frequency / cv->audio_config.frequency;
+
+      samples[i] = SDL_sinf(phase * 2 * SDL_PI_F);
+      cv->audio_config.current_sine_sample++;
+    }
+
+    /* wrapping around to avoid floating-point errors */
+    cv->audio_config.current_sine_sample %= (int)(cv->audio_config.frequency);
+
+    /* feed the new data to the stream. It will queue at the end, and trickle out as the hardware needs more data. */
+    SDL_PutAudioStreamData(sv->stream, samples, sizeof (samples));
+  }
+}
+
+void control_audio_stream(sdl_vars *sv,config_vars *cv,bool soundTimer) {
+
+  if (soundTimer) {
+    if (cv->audio_config.playing) {
+      return;
+    }
+    else {
+      SDL_ResumeAudioStreamDevice(sv->stream);
+      cv->audio_config.playing=true;
+
+    }
+  }
+
+  else {
+    if (cv->audio_config.playing) {
+      SDL_PauseAudioStreamDevice(sv->stream);
+      cv->audio_config.playing=false;
+
+    }
+
+    else {
+      return;
+    }
+  }
+
+
+}
 
