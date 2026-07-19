@@ -4,6 +4,9 @@
 
 /* System Instructions */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void ins_00E0(chip_8 *chip);
 void ins_00EE(chip_8 *chip);
@@ -64,4 +67,8 @@ void ins_Fx55(chip_8 *chip);
 void ins_Fx65(chip_8 *chip);
 void execute_opcode(chip_8 *chip);
 void ins_altFx0A(chip_8 *chip);
+
+#ifdef __cplusplus
+}
+#endif
 #endif /* INSTRUCTIONS_H */

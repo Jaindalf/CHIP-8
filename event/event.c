@@ -1,10 +1,12 @@
 #include "event.h"
 #include<stdio.h>
+#include "/home/pranjal-jain/Desktop/CHIP-8/imgui/backends/imgui_impl_sdl3.h"
 void poll_Events(bool keys[0xF],bool *paused,bool *next,SDL_Event *event,bool *isRunning) {
 
 
     while (SDL_PollEvent(event))
     {
+        ImGui_ImplSDL3_ProcessEvent(event);
         switch (event->type)
         {
             case SDL_EVENT_QUIT:

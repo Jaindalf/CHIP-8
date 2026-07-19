@@ -33,9 +33,14 @@ typedef struct  {
 #define START_ADDRESS 0x200
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void init_chip_8(chip_8* chip);
 void chip_load_rom(chip_8 *chip,char const *rom_name);
 void chip_get_opcode(chip_8 *chip);
-
+#ifdef __cplusplus
+}
+#endif
 #endif

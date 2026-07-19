@@ -3,3 +3,4 @@ vendored/
 .cache/
 .idea/
 test_roms/
+imgui/

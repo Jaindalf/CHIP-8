@@ -11,3 +11,7 @@ target_link_libraries(event
         PUBLIC
         SDL3::SDL3
 )
+target_link_libraries(event
+        PUBLIC
+        imgui
+)

@@ -46,8 +46,9 @@ typedef struct {
 #define BLACK ((color){0, 0, 0, 255})
 #define WHITE ((color){255, 255, 255, 255})
 
-
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 bool init_sdl(sdl_vars *sv, config_vars cv);
 void quit_sdl(sdl_vars sv);
 void setColor(sdl_vars *sv, color c);
@@ -55,6 +56,9 @@ void draw_buffer(bool buffer[64][32], sdl_vars *sv, const config_vars *cv);
 //audio stuff
 void fill_audio_stream(sdl_vars *sv, config_vars *cv);
 void control_audio_stream(sdl_vars *sv, config_vars *cv,bool soundTimer);
+#ifdef __cplusplus
+}
+#endif
 //void update(bool buffer[64][32],sdl_vars *sv,const config_vars *cv); //this really should not exist.
 
 #endif

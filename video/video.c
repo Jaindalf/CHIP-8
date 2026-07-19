@@ -79,10 +79,10 @@ void setColor(sdl_vars *sv, color c) {
 
 void draw_buffer(bool buffer[64][32], sdl_vars *sv, const config_vars *cv)
 {
-    setColor(sv, cv->bg_color);
-    SDL_RenderClear(sv->renderer);
+  //  setColor(sv, cv->bg_color);
+    //SDL_RenderClear(sv->renderer);
 
-    setColor(sv, cv->fg_color);
+    //setColor(sv, cv->fg_color);
 
     SDL_FRect r;
 	r.w=r.h=cv->scale;
@@ -102,7 +102,7 @@ void draw_buffer(bool buffer[64][32], sdl_vars *sv, const config_vars *cv)
         }
     }
 
-    SDL_RenderPresent(sv->renderer);
+   // SDL_RenderPresent(sv->renderer);
 }
 
 

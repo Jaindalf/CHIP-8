@@ -11,17 +11,19 @@ add_subdirectory(vendored/SDL EXCLUDE_FROM_ALL)
 add_subdirectory(video)
 add_subdirectory(event)
 add_subdirectory(chip_8)
-
+add_subdirectory(imgui)
 # Create your game executable target as usual
 
 
-add_executable(main  main.c)
+add_executable(main  main.cpp)
+#set_source_files_properties(main.c PROPERTIES LANGUAGE CXX)
 
 # Link against the video library
 target_link_libraries(main PRIVATE video)
 
 target_link_libraries(main PRIVATE event)
 target_link_libraries(main PRIVATE chip_8)
+target_link_libraries(main PRIVATE imgui)
 
 
 
